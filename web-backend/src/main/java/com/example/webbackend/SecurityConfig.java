@@ -17,17 +17,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-/**
- * پیکربندی کلی امنیتی پروژه با استفاده از JWT و دیتابیس
- */
+
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
 
     private final CustomUserDetailsService customUserDetailsService;
-
-    // سازنده برای تزریق سرویس (CustomUserDetailsService)
     public SecurityConfig(CustomUserDetailsService customUserDetailsService) {
         this.customUserDetailsService = customUserDetailsService;
     }
@@ -35,21 +31,13 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                // فعال‌کردن CORS
                 .cors(Customizer.withDefaults())
-
-                // غیرفعال کردن CSRF
                 .csrf(csrf -> csrf.disable())
-
-                // قواعد دسترسی:
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/signin", "/signup").permitAll()
                         .anyRequest().authenticated()
                 )
-
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-
-                // افزودن فیلتر JWT
                 .addFilterBefore(new JwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
@@ -59,9 +47,6 @@ public class SecurityConfig {
 
 
 
-    /**
-     *  پیکربندی AuthenticationManager با استفاده از UserDetailsService ما و PasswordEncoder
-     */
     @Bean
     public AuthenticationManager authManager(HttpSecurity http) throws Exception {
         AuthenticationManagerBuilder authBuilder =
@@ -74,9 +59,7 @@ public class SecurityConfig {
         return authBuilder.build();
     }
 
-    /**
-     * الگوریتم هش رمز عبور
-     */
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

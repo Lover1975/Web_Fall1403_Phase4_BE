@@ -31,7 +31,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String jwt = authHeader.substring(7);
         System.out.println("[JwtAuthenticationFilter] Token extracted from request: " + jwt);
 
-        // در اینجا تمامی توکن‌هایی که سرور دارد (allTokens) را چاپ می‌کنیم
         System.out.println("[JwtAuthenticationFilter] All tokens in server's list =>");
         for (String t : JWTUtil.allTokens) {
             System.out.println("   " + t);

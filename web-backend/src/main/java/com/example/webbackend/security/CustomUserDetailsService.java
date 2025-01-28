@@ -20,12 +20,9 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Person person = personRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
-
-        // حالا می‌توانیم از کلاس User با نقش‌ها یا از User.UserBuilder استفاده کنیم
-        // برای سادگی فقط از نقش USER استفاده می‌کنم
         return User.withUsername(person.getUsername())
-                .password(person.getPassword()) // پسورد هش‌شده
-                .roles("USER") // یا بسته به فیلد personType
+                .password(person.getPassword())
+                .roles("USER")
                 .build();
     }
 }

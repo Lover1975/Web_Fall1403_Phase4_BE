@@ -20,8 +20,8 @@ spring:
     driverClassName: org.postgresql.Driver
     initialization-mode: never
     initialize: true
-    password: 1234
-    url: jdbc:postgresql://localhost:5432/web
+    password: admin
+    url: jdbc:postgresql://localhost:5433/web
     username: postgres
   jpa:
     hibernate:

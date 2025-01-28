@@ -11,9 +11,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-/**
- * فیلتر بررسی JWT در هر درخواست.
- */
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
@@ -23,45 +20,35 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             FilterChain filterChain
     ) throws ServletException, IOException {
 
-        // لاگ پایه: نمایش اینکه وارد فیلتر شدیم و مسیر چیست
-        System.out.println("[JwtAuthenticationFilter] Request URI: " + request.getRequestURI());
-
         String authHeader = request.getHeader("Authorization");
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            // اگر Authorization header وجود نداشته باشد یا فرمت اشتباه باشد
             System.out.println("[JwtAuthenticationFilter] No valid Authorization header found.");
             filterChain.doFilter(request, response);
             return;
         }
 
-        // جدا کردن توکن
         String jwt = authHeader.substring(7);
-        System.out.println("[JwtAuthenticationFilter] Token extracted: " + jwt);
+        System.out.println("[JwtAuthenticationFilter] Token extracted from request: " + jwt);
+
+        // در اینجا تمامی توکن‌هایی که سرور دارد (allTokens) را چاپ می‌کنیم
+        System.out.println("[JwtAuthenticationFilter] All tokens in server's list =>");
+        for (String t : JWTUtil.allTokens) {
+            System.out.println("   " + t);
+        }
 
         try {
-            // اگر بخواهید جزییات Claims هم ببینید می‌توانید در JWTUtil لاگ کنید
             String username = JWTUtil.getUsernameFromToken(jwt);
-
-            // نمایش لاگ برای دیباگ
             System.out.println("[JwtAuthenticationFilter] Token is valid. Username = " + username);
 
-            // ساخت ابجکت Authentication
             var authToken = new UsernamePasswordAuthenticationToken(username, null, null);
-
-            // قرار دادن در SecurityContext
             SecurityContextHolder.getContext().setAuthentication(authToken);
 
-            // ادامه فیلترها
             filterChain.doFilter(request, response);
 
         } catch (JwtException e) {
-            // اگر خطای توکن یا تاریخ انقضا و غیره باشد
             System.out.println("[JwtAuthenticationFilter] JWT Error: " + e.getMessage());
-
-            // می‌توانیم خطای 401 یا 403 بدهیم. اینجا 401:
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid or expired token");
-            // عدم ادامه زنجیره فیلتر
         }
     }
 }

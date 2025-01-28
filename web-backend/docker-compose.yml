@@ -1,24 +1,56 @@
 services:
-  app:
-    build: .
-    ports:
-      - "8080:8080"
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/postgres
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=admin
-    depends_on:
-      - db
-
+  ###########################################################################
+  # 1) POSTGRES (Single Database)
+  ###########################################################################
   db:
     image: postgres:15-alpine
-    ports:
-      - "5433:5432"
+    container_name: my-postgres
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=admin
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    # ports:
+    #   - "5433:5432"
+
+  ###########################################################################
+  # 2) BACKEND (Spring Boot)
+  ###########################################################################
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+      
+    expose:
+      - "8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/postgres
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=admin
+
+
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.backend.rule=PathPrefix(`/`)"
+      - "traefik.http.routers.backend.entrypoints=web"
+      - "traefik.http.services.backend.loadbalancer.server.port=8080"
+
+  ###########################################################################
+  # 3) TRAEFIK (Reverse Proxy/Load Balancer)
+  ###########################################################################
+  traefik:
+    image: "traefik:v2.10"
+    container_name: my-traefik
+    command:
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+    ports:
+      - "8080:80"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
 
 volumes:
   postgres_data:

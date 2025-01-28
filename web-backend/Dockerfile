@@ -1,12 +1,11 @@
 FROM eclipse-temurin:17-jdk-alpine as build
 WORKDIR /workspace/web-backend
 
-COPY web-backend/mvnw .
-COPY web-backend/mvnw.cmd .
-COPY web-backend/.mvn .mvn
-
-COPY web-backend/pom.xml .
-COPY web-backend/src src
+COPY .mvn .mvn
+COPY mvnw .
+COPY mvnw.cmd .
+COPY pom.xml .
+COPY src src
 
 RUN chmod +x ./mvnw
 RUN ./mvnw install -DskipTests

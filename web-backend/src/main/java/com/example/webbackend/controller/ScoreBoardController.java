@@ -31,42 +31,28 @@ public class ScoreBoardController {
 
     @GetMapping(value = "get-score-board")
     public BaseResponse getScoreBoard() {
-        // چاپ پیام لاگ
         System.out.println("ScoreBoardController.get-score-board called...");
-
         List<Person> allPersons = personService.findAllPersons();
-
-        // چاپ سایز لیست و اگر خواستید نام کاربران
         System.out.println("All persons size: " + allPersons.size());
         for (Person p : allPersons) {
-            // اگر Score ممکن است null باشد، بهتر است کنترل کنید
             Integer score = p.getScore();
             System.out.println("User: " + p.getUsername() + " score=" + score);
         }
 
-        // اکنون مرتب‌سازی نزولی
         List<Person> top10 = allPersons.stream()
-                // اگر ممکن است getScore() = null باشد، بهتر است ابتدا null را صفر کنید
-                // یا درون comparator کنترل کنید. درحال‌حاضر، اگر null باشد => NullPointerException
                 .sorted((p1, p2) -> {
-                    // کنترل null
                     Integer s1 = p1.getScore() == null ? 0 : p1.getScore();
                     Integer s2 = p2.getScore() == null ? 0 : p2.getScore();
-                    return Integer.compare(s2, s1); // مرتب‌سازی نزولی
+                    return Integer.compare(s2, s1);
                 })
                 .limit(10)
                 .toList();
 
-        // چاپ سایز top10
         System.out.println("top10 size after sort: " + top10.size());
-
         List<ProfileDto> top10Dto = new LinkedList<>();
         for (Person person : top10) {
-            // مثلا چاپ می‌کنیم ببینیم اینجا چه کسی بررسی می‌شود
             System.out.println("In top10: " + person.getUsername() + " => Score=" + person.getScore());
-
             if (person.getPersonType() != PersonType.DESIGNER) {
-                // اگر امتیاز ممکن است null باشد، کنترلش کنید
                 Integer finalScore = person.getScore() == null ? 0 : person.getScore();
                 ProfileDto profileDto = new ProfileDto(
                         person.getId(),
@@ -87,7 +73,6 @@ public class ScoreBoardController {
 
     @PostMapping(value = "follow-action")
     public BaseResponse followAction(@RequestParam Long followerId, @RequestParam Long targetUserId) {
-        // اگر می‌خواهید اینجا هم پرینت کنید:
         System.out.println("ScoreBoardController.followAction => followerId=" + followerId
                 + ", targetUserId=" + targetUserId);
 
@@ -100,7 +85,6 @@ public class ScoreBoardController {
 
     @PostMapping(value = "unfollow-action")
     public BaseResponse unfollowAction(@RequestParam Long followerId, @RequestParam Long targetUserId) {
-        // پرینت:
         System.out.println("ScoreBoardController.unfollowAction => followerId=" + followerId
                 + ", targetUserId=" + targetUserId);
 

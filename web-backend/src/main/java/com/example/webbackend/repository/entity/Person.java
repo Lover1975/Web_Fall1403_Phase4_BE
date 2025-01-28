@@ -53,7 +53,6 @@ public class Person {
     )
     private Set<Question> answeredQuestions = new HashSet<Question>();
 
-    // Helper methods for managing followers/following relationships
     public void followPerson(Person personToFollow) {
         personToFollow.getFollowers().add(this);
         this.following.add(personToFollow);

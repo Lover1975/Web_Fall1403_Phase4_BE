@@ -1,0 +1,93 @@
+logging:
+  level:
+    net:
+      guides: INFO
+    org:
+      hibernate: INFO
+      hibernate.SQL: INFO
+spring:
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+  session:
+    jdbc:
+      initialize-schema: always
+  datasource:
+    #    hikari:
+    #      auto-commit: false
+    continue-on-error: true
+    driverClassName: org.postgresql.Driver
+    initialization-mode: never
+    initialize: true
+    password: 1234
+    url: jdbc:postgresql://localhost:5432/web
+    username: postgres
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        enable_lazy_load_no_trans: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+  #  show-sql: true
+  activemq:
+    broker-url:
+
+  cache:
+    type: caffeine
+
+path-config:
+  entering_fxml: "fxml/Entering.fxml"
+  signin_fxml: "fxml/Signin.fxml"
+  signup_fxml: "fxml/Signup.fxml"
+  mainmenu_fxml: "fxml/MainMenu.fxml"
+  tweet_fxml: "fxml/Tweet.fxml"
+  timeline_fxml: "fxml/TimeLine.fxml"
+  roomoutview_fxml: "fxml/RoomOutView.fxml"
+  choosingmenu_fxml: "fxml/ChoosingMenu.fxml"
+  personalpage_fxml: "fxml/PersonalPage.fxml"
+  messagingmainmenu_fxml: "fxml/MessagingMainMenu.fxml"
+  message_fxml: "fxml/Message.fxml"
+  roomchatbox_fxml: "fxml/RoomChatBox.fxml"
+  profile_fxml: "fxml/Profile.fxml"
+  showlist_fxml: "fxml/ShowList.fxml"
+  personoutview_fxml: "fxml/PersonOutView.fxml"
+  explore_fxml: "fxml/Explore.fxml"
+  setting_fxml: "fxml/Setting.fxml"
+  tweetmaking_fxml: "fxml/TweetMaking.fxml"
+  categorymessaging_fxml: "fxml/CategoryMessaging.fxml"
+  like_icon: "classpath:icons/like-icon.png"
+  unlike_icon: "classpath:icons/unlike-icon.png"
+
+ui-string-const-config:
+  userNameNotAvailable: "UserName not available"
+  addressNotAvailable: "Address not available"
+  following: "Following"
+  requested: "Requested"
+  follow: "Follow"
+  wrongPassword: "Wrong password"
+  deletedAccount: "Deleted account"
+  mouseMoved: "mose-moved"
+  selected: "selected"
+  personalPage: "Personal Page"
+  choosingWindow: "Choosing Window"
+  blackList: "Black List"
+  followers: "Followers"
+  confirm: "Confirm"
+  rejectAndNotify: "Reject and notify"
+  rejectAndNotNotify: "Reject and not notify"
+  entering: "Entering"
+  tweetmaking: "Tweet making"
+  retweet: "Retweet"
+  categoryMessaging: "Category messaging"
+  delete: "Delete"
+  edit: "Edit"
+number-const-config:
+  reportLimit: 3
+
+server:
+  error:
+    include-message: always
+
